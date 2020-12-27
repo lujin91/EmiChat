@@ -1,0 +1,488 @@
+#headWin{
+	height: 100px; 
+	margin: 0px; 
+	border:1px solid #CCC;
+}
+
+#headWin font{
+	font-size: 30px; 
+	line-height: 100px;
+	display:inline-block; 
+	text-align:inherit;
+	vertical-align:middle;
+	margin: 0px 20px;
+}
+
+#headWin span{
+	line-height: 100px;
+	display:inline-block; 
+	text-align:inherit;
+	font-family: 微软雅黑;
+	vertical-align:middle;
+}
+
+.mainDiv{
+	width:100%; 
+	height:840px;
+	margin-bottom: 50px;
+}
+
+.relationWin{
+	width: 25%; 
+	height: 100%;
+	float: left; 
+}
+
+.relationDiv{
+	height:720px;
+	padding: 19px 20px;
+	margin: 0px 0px;
+	border: 1px solid #CCC;
+}
+
+.tab-menu{
+	border:1px solid rgb(236, 236, 236);
+	height:38px;
+}
+
+.tab-menu ul{
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+.tab-menu li{
+	display: inline-block;
+	width: 50%;
+	vertical-align:middle;
+	text-align:center;
+	line-height:38px;
+	float: left;
+}
+
+.tab-menu li a{
+	display:block;
+	width: 100%;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.tab-content{
+	position: inherit;
+	bottom:0px;
+	left:0px;
+	right:0px;
+	border-left: 1px solid rgb(236, 236, 236);
+	border-right: 1px solid rgb(236, 236, 236);
+	border-bottom: 1px solid rgb(236, 236, 236);
+}
+
+.change a{
+	display:block;
+	width: 100%;
+	text-decoration: none;
+	font-weight: bold;
+	background: blue;
+	color: #FFF;
+}
+
+.chatItemTab{
+	height: 650px;
+	padding: 0px 10px;
+	position:inherit;
+	bottom:0px;
+	overflow-y:auto;
+}
+
+.adviceDiv{
+	background: url("../images/chat_menu_bg.gif");
+	height: 27px;
+	line-height: 27px;
+	border-left: 1px solid rgb(236, 236, 236);
+	border-right: 1px solid rgb(236, 236, 236);
+	border-bottom: 1px solid rgb(236, 236, 236);
+}
+
+#advice{
+	display: inline-block;
+	width:127px;
+	height: 27px;
+	line-height: 27px;
+	font-size: 12px;
+	text-decoration: none;
+	font-family: 微软雅黑;
+	text-align:right;
+	float: right;
+	border-left: 1px solid rgb(230, 230, 230);
+}
+
+#advice:active{
+	background-color: rgb(236, 236, 236);
+}
+
+#adviceImg{
+	width: 15px;
+	height: 14px;
+	vertical-align: middle;
+	margin: 2px;
+	filter: Alpha(opacity=90);
+}
+
+#adviceContent{
+	vertical-align: middle;
+	color: rgb(70, 70, 70);
+	margin-right: 5px;
+}
+#unreadCnt{
+	text-decoration: underline;
+	color: blue;
+}
+
+#grpOper{
+	display: inline-block;
+	width:127px;
+	height: 27px;
+	line-height: 27px;
+	font-size: 12px;
+	text-decoration: none;
+	font-family: 微软雅黑;
+	float: left;
+}
+
+#grpOper img{
+	vertical-align: middle;
+	margin: 2px 2px 2px 5px;
+	width: 18px;
+	height: 18px;
+}
+
+#grpOper font{
+	vertical-align: middle;
+	margin: 2px;
+	color: rgb(70, 70, 70);
+}
+
+#grpOper:active{
+	background-color: rgb(236, 236, 236);
+}
+
+.chatItem{
+	display:block;
+	margin: 10px 0px;
+	text-decoration: none;
+	padding:10px 0px;
+	border-bottom:1px solid rgb(236, 236, 236);
+	cursor:default; 
+}
+
+.chatBlinkItem{
+	display:block;
+	margin: 10px 0px;
+	text-decoration: none;
+	padding:10px 0px;
+	border-bottom:1px solid rgb(236, 236, 236);
+	background: yellow;
+}
+
+.chatItem img{
+	vertical-align:bottom;
+	width: 40px;
+	height: 40px;
+	margin: 0px 15px 0px 5px;
+}
+
+.chatItem span{
+	color: rgb(70, 70, 70);
+	font-size:20px;
+	font-weight:bold;
+	vertical-align: middle;
+	display:inline-block;
+}
+
+.grpItemlist{
+	font-size:10px;
+	text-decoration: underline;
+	font-style:italic;
+	color: rgb(123, 123, 123);
+	padding-left:5px;
+	cursor: pointer;
+	font-family: 微软雅黑;
+}
+
+.searchDiv{
+	height: 40px;
+	line-height: 40px;
+	margin: 20px 0px 0px 0px;
+    display: flex;
+}
+    
+.searchDiv input{
+    float: left;
+    flex: 4;
+    height: 30px;
+    outline: none;
+    border: 1px solid red;
+    box-sizing: border-box;
+    padding-left: 10px;
+}
+.searchDiv button{
+    float: right;
+    flex: 1;
+    height: 30px;
+    background-color: red;
+    color: white;
+    border-style: none;
+    outline: none;
+    vertical-align: middle;
+}
+.searchDiv button i{
+    font-style: normal;
+    line-height: 30px;
+}
+.searchDiv button:hover{
+    font-size: 16px;
+    cursor: pointer;
+}
+        
+.chatWin{
+	width: 75%;
+	height: 100%;
+	float: right;
+}
+
+.dialogInputWin{
+	border:1px solid #CCC;
+	height:798px;
+	margin: 20px 0px 20px 20px;
+}
+
+.chat-menu{
+	height: 5%;
+	width:100%;
+	padding: 0px;
+}
+
+.chat-menu ul{
+	display: block;
+	height: 27px;
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+	font-size: 14px;
+	vertical-align:bottom;
+	text-align:center;
+	border: none;
+	background:url("../images/chat_menu_bg.gif");
+}
+
+.chat-menu li{
+	display: inline-block;
+	width: 100px;
+	height: 100%;
+	line-height:27px;
+	vertical-align:bottom;
+	float: left;
+	border-right:1px solid #CCC;
+	cursor: default;
+	text-align: center;
+}
+
+.chat-menu li font{
+	text-align:center;
+}
+
+.chat-menu li a{
+	float:right; 
+	line-height:12px;
+	vertical-align:middle;
+	width:10px;
+	height:14px; 
+	font-size:0px; 
+	margin: 2px;
+	cursor: pointer; 
+	font-weight: inherit;
+    font-style: inherit;
+    font-family: Verdana,Arial,Helvetica,sans-serif;
+    text-decoration:none;
+	color: rgb(85, 85, 85);
+}
+
+/* 鼠标悬停时显示的状态 */
+.chat-menu li a:hover{
+	font-size:10px; 
+	visibility: visible;
+	background-color: red;
+	color: #FFF;
+}
+
+/* 鼠标移开仍保持点击后的状态 */
+.chat-menu li a:focus-within{
+	visibility: hidden;
+}
+
+/* 鼠标点击前显示的状态 */
+.chat-menu li a:link{
+	visibility: visible;
+}
+
+/* 鼠标点击时显示的状态 */
+.chat-menu li a:active{
+	font-size:10px; 
+	visibility: visible;
+	background-color: black;
+	color: #FFF;
+}
+
+/* 鼠标点击后的状态 */
+.chat-menu li a:visited{
+	background-color: red;
+	color: #FFF;
+}
+
+/* 鼠标移开仍保持点击后的状态 */
+.chat-menu li a:focus{
+	background-color: red;
+	color: #FFF;
+}
+
+.chat-main{
+	height: 95%;
+}
+
+
+#chatTabs{
+	height: 65%;
+}
+
+.chat-tab{
+	height: 100%;
+	padding: 0px 20px;
+}
+
+.chat-tab-title{
+	display:block;
+	font-size: 12px;
+	height: 5%
+}
+
+.chatCntntDiv{
+	padding: 0px;
+	width: 100%;
+	height: 95%;
+	border:none;
+	border-bottom:1px solid #CCC;
+	outline: none;
+	resize:none;
+	overflow-x:auto;
+	overflow-y:auto;
+}
+
+.receiveMsgDiv{
+	font-size: 14px;
+	padding: 5px 50px;
+	text-align:left;
+}
+
+.receiveMsgDiv span{
+	display:inline-block;
+	font-size: 14px;
+	width: 45%;
+	color: blue;
+}
+
+.receiveMsgDiv span font{
+	display:inline-block;
+	text-align:right;
+	font-size: 10px;
+	color: gray;
+	font-style: italic;
+}
+
+.receiveMsgDiv span img:hover{
+	cursor: pointer;
+}
+
+.speakMsgDiv{
+	font-size: 14px;
+	padding: 5px 50px;
+	text-align:right;
+}
+
+.infoMsgDiv{
+	font-size: 12px;
+	padding: 5px;
+	text-align:center;
+	color: gray;
+}
+
+.loadmoreDiv{
+	font-size: 10px;
+	padding: 5px;
+	text-align:center;
+}
+
+.loadmoreDiv font{
+	text-decoration: underline;
+	color: blue;
+}
+
+.loadmoreDiv font:hover{
+	cursor: pointer;
+}
+
+.speakMsgDiv span{
+	display:inline-block;
+	width: 45%;
+	font-size: 14px;
+	color: green;
+}
+
+.speakMsgDiv span img:hover{
+	cursor: pointer;
+}
+
+.speakMsgDiv span font{
+	display:inline-block;
+	text-align:right;
+	font-size: 10px;
+	color: gray;
+	font-style: italic;
+}
+
+.chatToolsDiv{
+	display:block;
+	height: 5%;
+	background-color: rgb(230, 230, 230);
+}
+
+.inputDiv{
+	display:block;
+	height: 25%;
+	padding: 0px 20px;
+}
+
+#inputTextArea{
+	padding: 0px;
+	width: 100%;
+	height:100%;
+	border:none;
+	outline: none;
+	resize:none;
+	overflow:auto;
+}
+
+.inputBtnDiv{
+	display:block;
+	height: 5%;
+	padding: 0px 10px;
+	background:rgb(240, 240, 240);
+	text-align: right;
+}
+
+.inlineSpan{
+	height: 100%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+

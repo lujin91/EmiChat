@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<!-- 1.引入外部资源文件。与spring整合后，此部分會交由spring维护，可删除 -->
+	<properties resource="config/db.properties"></properties>
+	
+	<settings>
+		<!-- 使用jdbc的getGeneratedKeys获取数据库自增主键值 -->
+		<setting name="useGeneratedKeys" value="true"/>
+		
+		<!-- 使用列别名替换列名 默认true -->
+		<setting name="useColumnLabel" value="true"/>
+		
+		<!-- 开启驼峰命名转换：Table{create_time} -> Entity{createTime} -->
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+	
+	<!-- 2.批量设置别名：扫描整个包下的类，别名為类名，首字母大小写都可以。与spring整合后，此部分會交由spring维护，可删除-->
+	<typeAliases>
+		<package name="com.emi.entity"/>
+	</typeAliases>
+	
+	<!-- 3.配置环境：可以配置多个环境，default：配置默认使用哪个配置环境。
+	与spring整合后，此部分會交由spring维护，可删除 -->	
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC"/>
+			<dataSource type="POOLED">
+				<!-- 配置连接信息 -->
+				<property name="driver" value="${jdbc.driver}"/>
+				<property name="url" value="${jdbc.url}"/>
+				<property name="username" value="${jdbc.username}"/>
+				<property name="password" value="${jdbc.password}"/>
+			</dataSource>
+		</environment>
+	</environments>
+	
+	<!-- 4.配置映射文件，mybatis會加载这些mapper映射文件至运行环境中，供SqlSession使用。
+	与spring整合后，此部分會交由spring维护，可删除 -->
+	<mappers>
+		<!-- 第一种：使用resource属性，resource指定mapper映射文件class path。
+		<mapper resource="com/emi/dao/UserMapper.xml"/>
+		-->
+		
+		<!-- 第二种：使用url属性，url指定mapper映射文件的绝对路径。
+		<mapper url="D:\Users\lu jin\work\WorkSpace\EmiChat_WorkSpace\EmiChat\src\com\emi\dao\UserMapper.xml"/>
+		 -->
+		
+		<!-- 第三种：使用class属性，此方法要求mapper接口名称和mapper映射文件名称相同，且放在同一目录下。
+		<mapper class="com.emi.dao.UserMapper"/>
+		 -->
+		
+		<!-- 第四种（推荐）：使用package标签，此方法要求mapper接口名称和mapper映射文件名称相同，且放在同一目录下。
+		作用仅仅是為了讓mybatis可以找到需要加载的mapper映射文件：通过扫描包名找到文件路径，通过扫描包下的类名來加载mapper.xml -->
+		<package name="com.emi.dao"/>
+	</mappers>
+	
+</configuration>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 使得mapper.xml与接口绑定成为可能：namespace与接口所在类路径相同，則开发人员无需再编写接口实现类
+（当然mapper中的sql语句的id需要与接口中的方法名相同，参数也应相符），这部分可由mybatis动态生成实现。 -->
+<mapper namespace="com.emi.dao.UserMapper">
+	
+	<!-- 添加cache标签就代表本mapper启用二级缓存。二级缓存是根据mapper的namespace划分的，相同的namespace的mapper查询数据放在同一个区域，
+	如果使用mapper代理方法每个mapper的namespace都不同，此时可以理解为二级缓存区域是根据mapper划分，也就是根据命名空间划分的，如果两个
+	mapper文件的命名空间一样，那么，它们就共享一个mapper缓存 -->
+	<cache></cache>
+	
+	<resultMap id="BaseResultMap" type="com.emi.entity.User">
+	    <id column="uid" jdbcType="VARCHAR" property="uid" />
+	    <result column="uname" jdbcType="VARCHAR" property="username" />
+	    <result column="password" jdbcType="VARCHAR" property="password" />
+	    <result column="headImg" jdbcType="VARCHAR" property="headImg" />
+	    <result column="emailAddr" jdbcType="VARCHAR" property="emailAddr" />
+	    <result column="nickname" jdbcType="INTEGER" property="nickname" />
+	    <result column="birthday" jdbcType="DATE" property="birthday" />
+	    <result column="status" jdbcType="INTEGER" property="status" />
+	</resultMap>
+  
+	<select id="queryUserById" resultType="com.emi.entity.User" parameterType="string">
+		select * from tb_user where uid=#{userId}
+	</select>
+	
+	<select id="queryUserByLogin" resultType="com.emi.entity.User" parameterType="string">
+		select * from tb_user where uname=#{userName} and password=#{password}
+	</select>
+	
+	<select id="queryUserByName" resultType="com.emi.entity.User" parameterType="string">
+		select * from tb_user where uname=#{userName}
+	</select>
+	
+	<select id="queryUsersByNameLike" resultType="com.emi.entity.User" parameterType="string">
+		select * from tb_user where uname like CONCAT('%',#{keyWord},'%') 
+	</select>
+	
+	<insert id="saveUser" parameterType="user">
+		insert into tb_user(uid, uname, password, headImg, emailAddr, nickname, birthday, status) value(#{uid}, #{uname}, #{password}, #{headImg}, #{emailAddr}, #{nickname}, #{birthday}, #{status})
+	</insert>
+	
+	<delete id="deleteUserById">
+		delete from tb_user where uid=#{userId}
+	</delete>
+	
+</mapper>

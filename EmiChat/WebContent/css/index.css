@@ -1,0 +1,172 @@
+body {
+	background: #f1f1f1;
+}
+
+.loginPage {
+	width: 490px;
+	height: 290px;
+	background: linear-gradient(top, #fff, #ededed);
+	background: -moz-linear-gradient(top, #fff, #ededed);
+	background: -webkit-linear-gradient(top, #fff, #ededed);
+	background: -o-linear-gradient(top, #fff, #ededed);
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -245px;
+	margin-top: -180px;
+	border-radius: 5px;
+	border: 2px solid #C1CAD5;
+}
+
+.loginPage .loginBody {
+	height: 244px;
+	width: 464px;
+	margin: 23px 13px; border : 1px solid #d7d7d7;
+	border-radius: 8px;
+	border: 1px solid #d7d7d7;
+}
+
+.loginPage .loginTitle {
+	padding: 14px 0 10px;
+	font-size: 24px;
+	text-align: center;
+	font-weight: bold;
+	letter-spacing:2px;
+}
+
+.loginPage h4 {
+	font-size: 28px;
+	text-align: center;
+	margin-top: 40px;
+	font-weight: bold;
+}
+
+.loginPage .item {
+	padding: 16px 0 0 100px;
+}
+
+.loginPage .item label {
+	display:inline-block;
+	width: 65px;
+	vertical-align: middle;
+	font-size: 12px;
+	letter-spacing: 2px;
+	font-family: Verdana,Arial,Helvetica,sans-serif;
+}
+
+.loginPage .item input {
+	width: 160px;
+	height: 24px;
+	line-height: 24px; background : #fff;
+	padding-left: 5px;
+	background: #fff;
+}
+
+.loginPage .item font {
+	display:inline-block;
+	width: 80px;
+	vertical-align: middle;
+	font-size: 12px;
+	letter-spacing: 2px;
+	font-family: Verdana,Arial,Helvetica,sans-serif;
+}
+
+.loginPage .itemBtnDiv{
+	text-align: right;
+	padding: 5px 85px;
+}
+
+.loginPage .itemBtnDiv button {
+	width: 80px;
+	height: 30px;
+	background: #169BD5;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	margin-right: 45px;
+}
+
+.loginPage .item a {
+	margin-left: 50px;
+}
+
+.loginPage .warn {
+	margin-top: 10px;
+	color: #b82631;
+	text-align: left;
+	font-size: 12px;
+	padding: 16px 0 0 100px;
+}
+
+#showlog {
+	font-size: 12px;
+	color: red;
+	text-align: center;
+	margin-top: 10px;
+}
+#showlog1 {
+	font-size: 12px;
+	color: red;
+	text-align: center;
+	margin-top: 10px;
+}
+#showlog2 {
+	font-size: 12px;
+	color: red;
+	text-align: center;
+	margin-top: 10px;
+}
+.loginPage p.copyRight{
+	float:right;
+	position:absolute;
+	bottom:-10px;
+	right:10px;
+	font-size:12px;
+	color:#333;
+}
+.password {
+	width: 490px;
+	height: 200px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	background:#fff;
+	margin-left: -245px;
+	margin-top: -100px;
+	border-radius: 5px;
+	border: 1px solid #C1CAD5/0;
+	box-shadow: 0 0 5px #C1CAD5;
+	padding-top:50px;
+}
+.password .item{
+	padding:10px 0 10px 100px;
+}
+.password .item label{
+	display:inline-block;
+	width:80px;
+}
+.password .item input[type="text"]{
+	width:200px;
+	height:26px;
+	line-height:26px;
+}
+.password .warn{
+	padding-left:100px;
+	color:red;
+}
+
+.password  .handle{
+	text-align:center;
+	padding:20px 0;
+}
+.password .handle button{
+	width:80px;
+	height:30px;
+	margin:10px 30px;
+	border:none;
+	border-radius:4px;
+}
+.password .handle .sure{
+	background:#169bd5;
+	color:#fff;
+}

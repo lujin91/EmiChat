@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 使得mapper.xml与接口绑定成为可能：namespace与接口所在类路径相同，則开发人员无需再编写接口实现类
+（当然mapper中的sql语句的id需要与接口中的方法名相同，参数也应相符），这部分可由mybatis动态生成实现。 -->
+<mapper namespace="com.emi.dao.MemberMapper">
+
+	<!-- 添加cache标签就代表本mapper启用二级缓存。二级缓存是根据mapper的namespace划分的，相同的namespace的mapper查询数据放在同一个区域，
+	如果使用mapper代理方法每个mapper的namespace都不同，此时可以理解为二级缓存区域是根据mapper划分，也就是根据命名空间划分的，如果两个
+	mapper文件的命名空间一样，那么，它们就共享一个mapper缓存 -->
+	<cache></cache>
+	
+	<resultMap id="BaseResultMap" type="com.emi.entity.Member">
+	    <id column="mid" jdbcType="VARCHAR" property="mid" />
+	    <result column="uid" jdbcType="VARCHAR" property="uid" />
+	    <result column="gid" jdbcType="VARCHAR" property="gid" />
+	    <result column="alias" jdbcType="VARCHAR" property="alias" />
+	    <result column="role" jdbcType="INTEGER" property="role" />
+	    <association property="group" javaType="com.emi.entity.Group" select="com.emi.dao.GroupMapper.queryGrpById" column="gid" />
+	    <association property="user" javaType="com.emi.entity.User" select="com.emi.dao.UserMapper.queryUserById" column="uid" />
+	</resultMap>
+  
+  	<!-- flushCache="true", 若当前statement是需要提交的（insert,update,delete），則flushCache默认是true,  
+  	若当前statement是select，則flushCache默认是false-->
+	<insert id="saveMember" parameterType="com.emi.entity.Member">
+		insert into tb_member(mid, uid, gid, alias, role) value(#{mid}, #{uid}, #{gid}, #{alias}, #{role})
+	</insert>
+	
+	<select id="queryGrpsForUser" parameterType="string" resultMap="BaseResultMap">
+		select * from tb_member where uid=#{uid}
+	</select>
+	
+	<select id="queryMembersByGrp" parameterType="string" resultMap="BaseResultMap">
+		select * from tb_member where gid=#{gid}
+	</select>
+	
+</mapper>
