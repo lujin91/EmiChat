@@ -8,8 +8,8 @@
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd 
-		http://www.springframework.org/schema/context 
-		http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
     
     <!-- 1.配置数据库相关参数 -->
 	<context:property-placeholder location="classpath:config/db.properties" />
@@ -45,4 +45,12 @@
 		<property name="basePackage" value="com.emi.dao"></property>
 	</bean>
 	
+	<!--  使用spring的事务处理  -->
+    <!--  1.声明事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="datasource"/>
+    </bean>
+    <!--  2.开启事务注解驱动，告诉spring使用注解管理事务，创建代理对象(中小项目使用注解的方式)  -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    
 </beans>
