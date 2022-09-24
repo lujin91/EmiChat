@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.emi.dao.UserMapper;
 import com.emi.entity.User;
 import com.emi.service.UserService;
+import com.emi.util.EmiServiceUtils;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -17,12 +18,13 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public int register(User user) throws Exception {
+		user.setPassword(EmiServiceUtils.digestPwd(user.getPassword()));
 		return mapper.saveUser(user);
 	}
 
 	@Override
 	public User login(String userName, String password) throws Exception {
-		return mapper.queryUserByLogin(userName, password);
+		return mapper.queryUserByLogin(userName, EmiServiceUtils.digestPwd(password));
 	}
 
 	@Override

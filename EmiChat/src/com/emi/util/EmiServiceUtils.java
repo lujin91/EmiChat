@@ -1,6 +1,10 @@
 package com.emi.util;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+
+import sun.misc.BASE64Encoder;
 
 import com.emi.entity.Group;
 import com.emi.entity.Member;
@@ -38,5 +42,16 @@ public class EmiServiceUtils {
 			}
 		}
 		return null;
+	}
+	
+	public static String digestPwd(String password) throws NoSuchAlgorithmException{
+		MessageDigest digest = MessageDigest.getInstance("SHA-256");
+		digest.update(password.getBytes());
+		byte[] bytes = digest.digest();
+		return new BASE64Encoder().encode(bytes);
+	}
+	
+	public static void main(String[] args) throws Exception {
+		System.out.println(digestPwd("password"));
 	}
 }

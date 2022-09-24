@@ -8,7 +8,13 @@
 	<!-- 添加cache标签就代表本mapper启用二级缓存。二级缓存是根据mapper的namespace划分的，相同的namespace的mapper查询数据放在同一个区域，
 	如果使用mapper代理方法每个mapper的namespace都不同，此时可以理解为二级缓存区域是根据mapper划分，也就是根据命名空间划分的，如果两个
 	mapper文件的命名空间一样，那么，它们就共享一个mapper缓存 -->
+	
 	<cache></cache>
+	
+	<!-- flushCache="true", 若当前statement是需要提交的（insert,update,delete），則flushCache默认是true,  
+  	若当前statement是select，則flushCache默认是false
+  	PS: flushCache(清空缓存)是当前namespace中所有的缓存都被清除。
+  	-->
 	
 	<resultMap id="BaseResultMap" type="com.emi.entity.RelationShip">
 	    <!--
@@ -34,7 +40,7 @@
 		insert into tb_relation(rid, remarkName, cid, uid) value(#{rid}, #{remarkName}, #{cid}, #{uid})
 	</insert>
 	
-	<select id="queryRelationsByUid" parameterType="string" resultMap="BaseResultMap" useCache="false">
+	<select id="queryRelationsByUid" parameterType="string" resultMap="BaseResultMap">
 		select * from tb_relation where uid=#{uid}
 	</select>
 	

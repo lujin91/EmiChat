@@ -22,7 +22,7 @@ public interface MessageMapper {
 	public List<Message> queryChatMessages(@Param(value = "type") int type, @Param(value = "uid1") String uid1, @Param(value = "uid2") String uid2);
 
 	public List<Message> queryChatMessagesByLastId(@Param(value = "uid1") String uid1, @Param(value = "uid2") String uid2, @Param(value = "lastId") int lastId, @Param(value = "size") int size);
-	//所以在MessageMapper.xml中填入parameterType="string"也能正常运行，猜测mybatis支持int和string互轉。
+	//在MessageMapper.xml中填入parameterType="string"也能正常运行，猜测mybatis支持int和string互轉。
 	
 	public List<Message> queryGrpMessages(@Param(value = "gid") String gid, @Param(value = "lastId") int lastId, @Param(value = "size") int size);
 	
@@ -31,4 +31,8 @@ public interface MessageMapper {
 	public List<Message> queryAdviceMessagesByLastId(@Param(value = "uid") String uid, @Param(value = "lastId") int lastId, @Param(value = "size") int size);
 	
 	public List<String> querySendIdsByParams(@Param(value = "type") int type, @Param(value = "uid") String uid);
+	
+	public int queryApplyCountByParams(@Param(value = "sendId") String sendId, @Param(value = "recvGrpId") String recvGrpId, @Param(value = "recvId") String recvId);
+
+	public List<String> queryMaxIdGroupBySendId(@Param(value = "uid")String uid);
 }

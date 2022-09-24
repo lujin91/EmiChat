@@ -5,10 +5,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.messager.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/chat_main.css" />
 <title>即时通讯主页面</title>
 </head>
-<body>
+<body style=" background-color: rgb(250, 250, 250);">
 	<div style="width:1200px; margin: 0px auto;">
 		<%@ include file="chatPart/chat_banner.jsp" %>
 		<div class="mainDiv">
@@ -18,14 +19,6 @@
             		<button id="searchBtn"><i>搜索</i></button>
         		</div>
         		<div id="chatListDiv"><%@ include file="chatPart/chat_list.jsp" %></div>
-        		<!--@include是静态包含，被包含文件编译完成后再被包含进来，而jsp:include是动态包含，是将被包含的内容加入到本页面再一起编译-->
-        		<!--块级元素设置宽高是可以生效的，但行内元素其本质就是依据包含的内容来确认宽高，所以不能设置宽高-->
-        		<!--行内元素可以设置display来让其变为行内的块级元素，行内的块级元素无法独占一行，它拥有块级元素的功能，同时又属于行内-->
-        		<!--块级元素margin，padding都可以设置，但行内元素只有padding、和左右方向的margin设定有效，上下方向的margin设定是不起作用的-->
-        		<!--上下两个块级元素A、B：A设定margin-bottom是10px，B设定margin-top是20px，那么A B 上下之间的空隙就是20px，而不是30px，因为20px才满足其margin的要求-->
-        		<!--上下两个元素A、B：A是块级元素，B是行内元素，A设定margin-bottom是10px，但A B之间没有空隙，margin的生效是在同级元素，只有当B也是块级元素时，A B之间的空隙才会是10px-->
-        		<!--重要：行内元素的盒模型位置是不会因设定了padding而改变的：块级元素A包含行内元素B，A没有设置padding，若B设置了padding为10px，由于B的盒模型位置不会改变，但padding又需要生效，所以B的上边框将超过A的边框10px-->
-        		<!--PS: 块级元素display:block;  行内元素display:inline;-->
 			</div>
 			
 			<%@ include file="chatPart/chat_input.jsp" %>
@@ -43,18 +36,28 @@
 </body>
 <script type="text/javascript">
 
-	$(function()
-	{
+	var winfocus;
+	$(function(){
 		ws_init();
 		html_init();
 		window.setInterval(reloadPageInfo, 15000);
+		window.onblur = function(){
+			winfocus = false; 
+		}
+		window.onfocus = function(){
+			winfocus = true; 
+		}
 	});
 	
 	
 	function ws_init()
 	{
+		var protocol = window.location.protocol;
 		var domain = window.location.host;
 		var target = "ws://" + domain + "/EmiChat/chat";
+		if(protocol == "https:"){
+			target = "wss://" + domain + "/EmiChat/chat";
+		}
 		if('WebSocket' in window){
 			ws = new WebSocket(target);
 		}else if('MozWebSocket' in window){
@@ -90,18 +93,23 @@
 				}
 				if($("#menu-" + chatId).length <= 0){
 					blink($("#" + chatId), 'rgb(255,237,106)', 3);
+					if(chatType == 2 && $("#groupTab").is(":hidden")){
+						
+						blink($(".tab-menu li:nth-child(2)"), 'rgb(255,237,106)', 3);
+					}else if(chatType == 1 && $("#personTab").is(":hidden")){
+						blink($(".tab-menu li:nth-child(1)"), 'rgb(255,237,106)', 3);
+					}
 				}else{
 					blink($("#menu-" + chatId), 'rgb(255,237,106)', 3);
 				}
 				
-				var receiveDiv = "<div class=receiveMsgDiv><span><font>" + message.sendTime + "&nbsp;&nbsp;" + content.uname + ":</font><br>" + content.text + "<p></span></div>";
-				$("#chatContent-" + chatId).append(receiveDiv);
-				
-				var isFocus = $("#inputTextArea").is(":focus");
-				
-				if(isFocus == true){
+				if($("#chatContent-" + chatId).length > 0){
+					var receiveDiv = "<div class=receiveMsgDiv><div class=receiveMsgSpan><font>" + message.sendTime + "&nbsp;&nbsp;" + content.uname + ":</font><br>" + content.text + "</div></div><p>";
+					$("#chatContent-" + chatId).append(receiveDiv);
 					$("#chatContent-" + chatId).scrollTop($("#chatContent-" + chatId)[0].scrollHeight);
 				}
+				
+				notifyUser(chatId, "[" + content.uname + "] 发来一条消息，请点击去查看。 ", "message");
 			}
 		}
 	}
@@ -114,8 +122,9 @@
 			function(info)
 			{
 				$("#unreadCnt").html(info["unreads"]);
-				if(info["unreads"] > 0){
+				if(info["unreads"] > 0 && $("#advice").css("background-color") != "rgb(255, 237, 106)"){
 					blink($("#advice"), 'rgb(255,237,106)', 3);
+					notifyUser(null, "您有未读的系统通知，请点击去查看。 ", "advice");
 				}
 				$.each(info["grps"], function (index, item) {
 					if($("#" + item.grpId).length <= 0){
@@ -144,7 +153,8 @@
 						$("#" + item.cid + " img").attr("src", "${pageContext.request.contextPath}/images/offline_user.png");
 					}
 					
-					if(item.blink == true){
+					if(item.blink == true && $("#" + item.cid).css("background-color") != "rgb(255, 237, 106)")
+					{
 						blink($("#" + item.cid), 'rgb(255,237,106)', 3);
 					}
 	        	});
@@ -158,6 +168,7 @@
 	{
 		$(".tab-menu li").unbind('click').bind('click', function(){
 			var index = $(this).index();
+			$(this).css('background','');
 			$(".chatItemTab").eq(index).show().siblings().hide();
 			$(this).addClass("change").siblings().removeClass("change");
 		});
@@ -166,7 +177,7 @@
 		
 		$("#searchInput").focus();
 		
-		$("#inputTextArea").unbind('keydown').bind('keydown', function(){
+		$("#inputTextArea").unbind('keypress').bind('keypress', function(){
 			if(event.keyCode == 13){
 				if($("#sendMsgBtn").attr("disabled"))
 				{
@@ -174,12 +185,7 @@
 				}else{
 					$("#sendMsgBtn").click();
 				}
-			}
-		});
-		
-		$("#inputTextArea").unbind('keyup').bind('keyup', function(){
-			if(event.keyCode == 13){
-				$("#inputTextArea").html("");
+				event.preventDefault();
 			}
 		});
 		
@@ -250,7 +256,7 @@
 		$("#personTab").append(relationItem);
 	}
 	
-	function addChatMeunAndTab(chatItemTab, chatId, chatType)
+	function addChatMeunAndTab(chatItemTab, chatId, chatType) //chatItemTab是$("#" + chatId)傳入，説明$("XX")在javascript裏是可以當作參數對象chatItemTab傳入，在使用時chatItemTab直接看作是$("XX")，無需$(chatItemTab)。
 	{
 		var menuEle="<li id=menu-" + chatId + " chatType=" + chatType + "><font>" + chatItemTab.children("span").text() + "</font><a href='javascript:void(0);'>x</a></li>";
 		var tabEle="<div id=chatTab-" + chatId + " class='chat-tab'><font class=chat-tab-title>与" +  chatItemTab.children("span").text()+ "交谈中.. </font><div id=chatContent-" + chatId + " class=chatCntntDiv></div></div>";
@@ -261,27 +267,53 @@
 			$("#chatTab-"+chatId).hide();	
 		}
 		
-		$("#sendMsgBtn").attr("disabled",false);
+		$("#sendMsgBtn").removeAttr("disabled");
 		
 		$("#menulist li").unbind('click').bind('click', function(){
 			var index = $(this).index();
-			$(this).css("background","#FFF").siblings().css("background","url('../images/chat_menu_bg.gif')").css("font-weight","normal");
+			$(this).css("background","#FFF").siblings().css("font-weight","normal");
+			$(this).siblings().each(function(idx, menuEle){
+				if($(menuEle).css("background-color") != "rgb(255, 237, 106)")
+				{
+					$(menuEle).css("background","url('../images/chat_menu_bg.gif')");
+				}
+			});
 			$(this).children("font").css("font-weight","bold");
 			$(this).siblings().children("font").css("font-weight","normal");
 			$(".chat-tab").eq(index).show().siblings().hide();
+			$("#chatContent-" + $(this).attr("id").split('-')[1]).scrollTop($("#chatContent-" + $(this).attr("id").split('-')[1])[0].scrollHeight);
 			$("#sendMsgBtn").attr("chatType", $(this).attr("chatType"));
 			$("#sendMsgBtn").attr("chatId", $(this).attr("id").split('-')[1]);
+			$("#" + $(this).attr("id").split('-')[1]).css("background-color","rgb(236, 236, 236)");
+			$("#" + $(this).attr("id").split('-')[1]).siblings().each(function(idx, chatEle){
+				if($(chatEle).css("background-color") != "rgb(255, 237, 106)")
+				{
+					$(chatEle).css("background-color","rgb(250, 250, 250)");
+				}
+			});
 		});
 		
 		$("#menulist li a").unbind('click').bind('click', function(){
 			var chatId = $(this).parent("li").attr("id").split('-')[1];
+			var prevItem = $(this).parent("li").prev("li");
+			var nextItem = $(this).parent("li").next("li");
+			var closeShow = false;
+			if($("#menu-" + chatId).css("background-color").indexOf("rgb(255, 255, 255)") != -1){
+				closeShow = true;
+			}
 			$("#menu-" + chatId).remove();
 			$("#chatTab-" + chatId).remove();
 			$("#sendMsgBtn").removeAttr("chatId");
 			$("#sendMsgBtn").removeAttr("chatType");
-			if($("#menulist li:first-child").length > 0)
+			if($("#menulist li").length > 0)
 			{
-				$("#menulist li:first-child").click();
+				if(closeShow){
+					if(prevItem.length > 0){
+						prevItem.click();
+					}else if(nextItem.length > 0){
+						nextItem.click();
+					}
+				}
 			}
 			else
 			{
@@ -293,7 +325,17 @@
 	function initChatItemBindEvent()
 	{
 		$(".chatItem").unbind('click').bind('click', function(){
-			$(this).css("background-color","rgb(236, 236, 236)").siblings().css("background-color","#FFF");
+			$(this).css("background-color","rgb(236, 236, 236)");
+			$(this).siblings().each(function(idx, chatEle){
+				if($(chatEle).css("background-color") != "rgb(255, 237, 106)")
+				{
+					$(chatEle).css("background-color","rgb(250, 250, 250)");
+				}
+			});
+			var chatId = $(this).attr("id");
+			if($("#menu-" + chatId).length > 0){
+				$("#menu-" + chatId).click();
+			}
 		});
 		
 		$(".chatItem").unbind('dblclick').bind('dblclick', function(){
@@ -337,6 +379,7 @@
 			success: 
 				function(list)
 				{
+					var oldHeight = $("#chatContent-" + chatId)[0].scrollHeight;
 					$.each(list, function (index, message){
 						var remarkName = $("#" + chatId + " font").html();
 						var contentDiv;
@@ -344,9 +387,9 @@
 							contentDiv = "<div class=infoMsgDiv><span><font>" + message.content.text + "</font><br></span></div>";
 						}
 						else if(message.sendId == "${user.uid}"){
-							contentDiv = "<div class=speakMsgDiv><span><font>" + message.sendTime + "&nbsp;&nbsp;" + message.content.uname + "</font><br>" + message.content.text + "<p></span></div>";
+							contentDiv = "<div class=speakMsgDiv><div class=speakMsgSpan><font>" + message.sendTime + "&nbsp;&nbsp;" + message.content.uname + "</font><br>" + message.content.text + "</div></div><p>";
 						}else{
-							contentDiv = "<div class=receiveMsgDiv><span><font>" + message.sendTime + "&nbsp;&nbsp;" + message.content.uname + "</font><br>" + message.content.text + "<p></span></div>";
+							contentDiv = "<div class=receiveMsgDiv><div class=receiveMsgSpan><font>" + message.sendTime + "&nbsp;&nbsp;" + message.content.uname + "</font><br>" + message.content.text + "</div></div><p>";
 						}
 						$("#chatContent-" + chatId).prepend(contentDiv);
 						if(index == list.length-1){
@@ -363,6 +406,9 @@
 					}
 					if(bottom){
 						$("#chatContent-" + chatId).scrollTop($("#chatContent-" + chatId)[0].scrollHeight);
+					}else{
+						var newHeight = $("#chatContent-" + chatId)[0].scrollHeight;
+						$("#chatContent-" + chatId).scrollTop($("#chatContent-" + chatId).scrollTop() + newHeight - oldHeight);
 					}
 				},
 			dataType: "json",
@@ -376,10 +422,12 @@
 			if(isEmpty($(this).attr("src"))){
 				$(this).remove();
 			}else{
-				$(this).css({
-					width: '300px',
-					height: 'auto'
-				});
+				if(this.width > 300){
+					$(this).css({
+						width: '300px',
+						height: 'auto'
+					});
+				}
 				$(this).attr("onclick","showChatImgSize(this)");
 			}
 		});
@@ -389,8 +437,10 @@
 		}
 		else
 		{
+			var existImg = false;
 			if($("#inputTextArea img").length > 0)
 			{
+				existImg = true;
 				var imgMap = {};
 				$("#inputTextArea img").each(function(){
 					var imgIndex = "ImgIdx_" + $(this).index();
@@ -414,10 +464,19 @@
 					async: false	
 				});
 			}
-			var content = {"uname":"${user.uname}", "text": $("#inputTextArea").html()};
+			if(existImg)
+			{
+				var fmtContent = $("#inputTextArea").html();
+			}
+			else
+			{
+				var fmtContent = "<div><span>" + $("#inputTextArea").html() + "</span></div>";
+			}
+			
+			var content = {"uname":"${user.uname}", "text": fmtContent};
 			var now = new Date();
 			var chatId = $("#sendMsgBtn").attr("chatId");
-			var speakDiv = "<div class=speakMsgDiv><span><font>" + formatDate(now, 'yyyy-MM-dd hh:mm:ss') + "&nbsp;&nbsp;${user.uname}</font><br>" + $("#inputTextArea").html() + "<p></span></div>";
+			var speakDiv = "<div class=speakMsgDiv><div class=speakMsgSpan><font>" + formatDate(now, 'yyyy-MM-dd hh:mm:ss') + "&nbsp;&nbsp;${user.uname}</font><br>" + fmtContent + "</div></div><p>";
 			$("#inputTextArea").html("");
 			$("#chatContent-" + chatId).append(speakDiv);
 			$("#chatContent-" + chatId).scrollTop($("#chatContent-" + chatId)[0].scrollHeight);
@@ -428,17 +487,47 @@
 			}else{
 				message = {"sendId":"${user.uid}", "recvGrpId": chatId, "chatType": chatType, "sendTime": formatDate(now, 'yyyy-MM-dd hh:mm:ss'), "content": JSON.stringify(content), "operation":"CHAT"};
 			}
+			$("#menu-" + chatId).click();
 	    	ws.send(JSON.stringify(message));
 		}
 	}
 	
-	function showChatImgSize(img){
-		$.MsgBox.showImg("图片","<img src='" + $(img).attr("src") + "' style='width:100%; height:auto;'>", "关闭");
+	function clearInput(){
+		$("#inputTextArea").html("");
 	}
 	
-	function clearInput()
-	{
-		$("#inputTextArea").html("");
+	function showChatImgSize(img){
+		
+		var _w = parseInt($(window).width());	//获取屏幕宽
+		var _h = parseInt($(window).height());	//获取屏幕高
+		var realWidth;
+		var realHeight;
+		var style = "";
+		
+		$("<img/>").attr("src", $(img).attr("src")).load(function(){
+			realWidth = this.width;
+			realHeight = this.height;
+			
+			if(realWidth >= _w * 0.8)
+			{
+				style += 'width:' + (_w * 0.8) + 'px;';
+				if(realHeight * 0.8 >= 800)
+				{
+					style += 'height:800px;';
+				}else{
+					style += 'height:' + _h * 0.8 + 'px;';
+				}
+			}
+			else
+			{
+				if(realHeight >= 800)
+				{
+					style += 'height:800px;';
+				}
+			}
+			
+			$.MsgBox.showImg("图片","<img src='" + $(img).attr("src") + "' style='" + style + "'>", "关闭");
+		});
 	}
 	
 	
@@ -472,6 +561,22 @@
 		return fmt;			
 	}
 	
+	function blinkTitle(){
+		var i = 0;
+		var ref = setInterval(function(){
+			if(i % 2 == 0){
+				document.title = '【您有未读讯息】';
+			}else{
+				document.title = '即时通讯主页面';
+			}
+			i++;
+			if(i == 2 * 3){
+				document.title = '即时通讯主页面';
+				clearInterval(ref);
+			}
+		}, 500);
+	}
+	
 	function blink(element, color, times){
 		var current = element.css('background');
 		var i = 0;
@@ -488,6 +593,61 @@
 			}
 		}, 500);
 	}
+	
+	function popNotice(chatId, content, type)
+	{
+		if(Notification.permission == "granted"){
+			var noticeImg;
+			if(type == "message"){
+				noticeImg = "${pageContext.request.contextPath}/images/online_user.png";
+			}else{
+				noticeImg = "${pageContext.request.contextPath}/images/advice2.png";
+			}
+			var notification = new Notification("Emi WebChat:", {
+				body: content,
+				icon: noticeImg,
+				tag: 'renotify',
+				renotify: true
+			});
+			notification.onclick = function(){
+				if(!isEmpty(chatId)){
+					if($("#menu-" + chatId).length > 0){
+						$("#menu-" + chatId).click();
+						$("#chatContent-" + chatId).scrollTop($("#chatContent-" + chatId)[0].scrollHeight);
+					}
+				}
+				notification.close();
+			}
+		}
+	}
+	
+	function notifyUser(chatId, content, type)
+	{
+		if(window.Notification)
+		{
+			/* if(document.visibilityState === 'hidden'){
+				if(Notification.permission == "granted"){
+					popNotice(content, type);
+				}else if(Notification.permission != "denied"){
+					Notification.requestPermission(function (permission){
+						popNotice(content, type);
+					});
+				}
+			} */
+			
+			if(!winfocus){
+				if(Notification.permission == "granted"){
+					popNotice(chatId, content, type);
+				}else if(Notification.permission != "denied"){
+					Notification.requestPermission().then(function (permission){
+						popNotice(chatId, content, type);
+					});
+				}
+			}
+		}
+		blinkTitle();
+	}
+	
 	
 	(function() {
 	    $.MsgBox = {
@@ -660,7 +820,7 @@
 	        });
 	        $("#mb_img").css({
 	            zIndex: '999999',
-	            width: '80%',
+	            display: 'inline-block', 
 	            position: 'fixed',
 	            backgroundColor: 'White',
 	            borderRadius: '15px'
@@ -823,22 +983,38 @@
 	  	//定义申请按钮事件
 	    var btnApply = function() {
 	    	$(".applyBtn").click(function(){
-	    		$(this).attr("disabled","disabled");
-	    		$(this).html("已发送申请");
-	    		$(this).css({backgroundColor: 'gray', fontSize: '10px'});
 	    		var chatId = $(this).attr("id").split('-')[1];
 		    	var chatType = $(this).attr("value");
-		    	var now = new Date();
-		    	var message;
-		    	var content;
-		    	if(chatType == 1){
-		    		content = {"uname":"${user.uname}", "text": "请求添加您为好友，是否接受？"};
-			    	message = {"sendId":"${user.uid}", "recvId": chatId, "chatType": chatType, "sendTime": formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'), "content": JSON.stringify(content), "operation":"APPLY"};
-		    	}else{
-		    		content = {"uname":"${user.uname}", "text": "申请加入" + $(this).siblings("font").html() + "，是否接受？"};
-		    		message = {"sendId":"${user.uid}", "recvGrpId": chatId, "chatType": chatType, "sendTime": formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'), "content": JSON.stringify(content), "operation":"APPLY"};
-		    	}
-		    	ws.send(JSON.stringify(message));
+		    	var applyBtn = $(this);
+	    		$.ajax({
+					type: "post",
+					url: "${pageContext.request.contextPath}/chat/validApply",
+					data:{"sendId":"${user.uid}", "chatId":chatId, "chatType":chatType},
+					success: 
+						function(obj)
+						{
+							applyBtn.attr("disabled","disabled");
+							applyBtn.css({backgroundColor: 'gray', fontSize: '10px'});
+							if(!obj.valid){
+								applyBtn.html("<i>已发送过申请，切勿频繁申请<i>");
+							}else{
+								applyBtn.html("已发送申请");
+						    	var now = new Date();
+						    	var message;
+						    	var content;
+						    	if(chatType == 1){
+						    		content = {"uname":"${user.uname}", "text": "请求添加您为好友，是否接受？"};
+							    	message = {"sendId":"${user.uid}", "recvId": chatId, "chatType": chatType, "sendTime": formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'), "content": JSON.stringify(content), "operation":"APPLY"};
+						    	}else{
+						    		content = {"uname":"${user.uname}", "text": "申请加入" + applyBtn.siblings("font").html() + "，是否接受？"};
+						    		message = {"sendId":"${user.uid}", "recvGrpId": chatId, "chatType": chatType, "sendTime": formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'), "content": JSON.stringify(content), "operation":"APPLY"};
+						    	}
+						    	ws.send(JSON.stringify(message));
+							}
+						},
+					dataType: "json",
+					async: true	
+				});
 	    	});
 	    }
 	  	

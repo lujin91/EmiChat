@@ -17,6 +17,12 @@ public interface MessageService {
 	
 	public List<String> loadOfflineChatItemlist(String uid)throws Exception;
 	
+	public Map<String, Integer> loadLastIdByFriend(String uid)throws Exception;
+	
 	public void approved(String applyId, Message message)throws Exception;
+
+	public boolean validApply(String sendId, String chatId, int chatType)throws Exception;
+	
+	public void markReadAdvice(String uid)throws Exception;
 	
 }

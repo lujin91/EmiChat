@@ -16,5 +16,5 @@ public interface GroupMapper {
 	
 	public List<Group> queryGrpByNameLike(@Param(value = "keyWord") String keyWord);
 
-	public Group queryGroupDetailById(@Param(value = "gid") String gid); 
+	public Group queryGroupDetailById(@Param(value = "gid") String gid);
 }

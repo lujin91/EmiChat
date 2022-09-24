@@ -157,7 +157,6 @@ public class User implements Serializable, HttpSessionBindingListener{
 		{
 			Session session = ChatServerEndpoint.getClients().get(this.uid);
 			if(session != null && session.isOpen()){
-				ChatServerEndpoint.alert(session, "WARN:您长时间未操作页面，您已自动下线！");
 				IOUtils.closeQuietly(session);
 			}
 			ChatServerEndpoint.clearWebSocket(this.uid);

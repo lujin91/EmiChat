@@ -19,6 +19,8 @@ public class RelationShip implements Serializable, Comparable<RelationShip> {
 	
 	private boolean blink;
 	
+	private Integer lastRecvMsgId;
+	
 	private User contack;
 	
 	private User user;
@@ -79,6 +81,14 @@ public class RelationShip implements Serializable, Comparable<RelationShip> {
 		this.blink = blink;
 	}
 
+	public Integer getLastRecvMsgId() {
+		return lastRecvMsgId;
+	}
+
+	public void setLastRecvMsgId(Integer lastRecvMsgId) {
+		this.lastRecvMsgId = lastRecvMsgId;
+	}
+
 	public User getUser() {
 		return user;
 	}
@@ -92,7 +102,16 @@ public class RelationShip implements Serializable, Comparable<RelationShip> {
 	public int compareTo(RelationShip ship) {
 		
 		int result = 0;
-		if(this.online && !ship.online)
+		
+		if(this.blink && !ship.blink)
+		{
+			result = -1;
+		}
+		else if(!this.blink && ship.blink)
+		{
+			result = 1;
+		}
+		else if(this.online && !ship.online)
 		{
 			result = -1;
 		}
@@ -102,7 +121,8 @@ public class RelationShip implements Serializable, Comparable<RelationShip> {
 		}
 		else
 		{
-			result = Collator.getInstance(java.util.Locale.CHINA).compare(this.getRemarkName(), ship.getRemarkName());
+			result = ship.getLastRecvMsgId() - this.getLastRecvMsgId();
+			result = result != 0 ? result : Collator.getInstance(java.util.Locale.CHINA).compare(this.getRemarkName(), ship.getRemarkName());
 		}
 		return result;
 	}

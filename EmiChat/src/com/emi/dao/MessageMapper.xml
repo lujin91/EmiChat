@@ -8,7 +8,13 @@
 	<!-- 添加cache标签就代表本mapper启用二级缓存。二级缓存是根据mapper的namespace划分的，相同的namespace的mapper查询数据放在同一个区域，
 	如果使用mapper代理方法每个mapper的namespace都不同，此时可以理解为二级缓存区域是根据mapper划分，也就是根据命名空间划分的，如果两个
 	mapper文件的命名空间一样，那么，它们就共享一个mapper缓存 -->
+	
 	<cache></cache>
+	
+	<!-- flushCache="true", 若当前statement是需要提交的（insert,update,delete），則flushCache默认是true,  
+  	若当前statement是select，則flushCache默认是false
+  	PS: flushCache(清空缓存)是当前namespace中所有的缓存都被清除。
+  	-->
 	
 	<resultMap id="BaseResultMap" type="com.emi.entity.Message">
 	    <id column="id" jdbcType="INTEGER" property="id" />
@@ -46,7 +52,7 @@
 	</select>
 	
 	<select id="queryChatMessagesByBeginId" parameterType="string" resultType="com.emi.entity.Message">
-		select * from tb_message where id &gt;= #{beginId} and type in (0, 1) and ((recvId=#{uid1} and sendId=#{uid2}) or (recvId=#{uid2} and sendId=#{uid1})) 
+		select * from tb_message where id &gt;= #{beginId} and type in (0, 1) and ((recvId=#{uid1} and sendId=#{uid2}) or (recvId=#{uid2} and sendId=#{uid1})) order by id desc
 	</select>
 	
 	<select id="queryChatMessages" parameterType="string" resultType="com.emi.entity.Message">
@@ -85,6 +91,17 @@
 		select distinct(sendId) from tb_message where type=#{type} and recvId=#{uid}
 	</select>
 	
+	<!-- (@Param(value = "sendId") String sendId, @Param(value = "recvGrpId") String recvGrpId, @Param(value = "recvId") String recvId); -->
+	<select id="queryApplyCountByParams" parameterType="string" resultType="int" useCache="false">
+		select count(*) from tb_message where sendId=#{sendId}
+		<if test="recvId != null">
+	       and recvId=#{recvId}
+	    </if>
+	    <if test="recvGrpId != null">
+	       and recvGrpId=#{recvGrpId}
+	    </if>
+		and type in (2,3,4) and sendTime >= current_timestamp - interval 30 minute;
+	</select>
 	
 	<!-- <select id="queryMessagesByLastId" parameterType="string" resultType="com.emi.entity.Message">
 		select * from tb_message where type=#{type} and (recvId=#{recvId}
@@ -98,4 +115,7 @@
 	    order by id asc limit 0, #{size}
 	</select> -->
 	
+	<select id="queryMaxIdGroupBySendId" parameterType="string" resultType="string">
+		select CONCAT(CONCAT(sendId,'#'),max(id)) from tb_message where recvId=#{uid} group by sendId
+	</select>
 </mapper>

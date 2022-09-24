@@ -277,7 +277,6 @@
 
 .chat-menu li{
 	display: inline-block;
-	width: 100px;
 	height: 100%;
 	line-height:27px;
 	vertical-align:bottom;
@@ -288,7 +287,13 @@
 }
 
 .chat-menu li font{
+	display: inline-block;
+	width:90px;
+	padding-left:5px;
 	text-align:center;
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow: ellipsis;
 }
 
 .chat-menu li a{
@@ -383,22 +388,34 @@
 	text-align:left;
 }
 
-.receiveMsgDiv span{
+.receiveMsgSpan{
 	display:inline-block;
 	font-size: 14px;
 	width: 45%;
-	color: blue;
 }
 
-.receiveMsgDiv span font{
+.receiveMsgSpan div{
+	display: inline-block;
+	background-color: rgb(255, 255, 255);
+	border: 0.5px solid rgb(240, 240, 240);
+	border-radius:5px !important;
+	font-size: 14px;
+	line-height: 16px;
+	padding: 10px;
+	font-family: 微软雅黑;
+	color: rgb(63, 63, 63);
+}
+
+.receiveMsgSpan font{
 	display:inline-block;
 	text-align:right;
-	font-size: 10px;
-	color: gray;
-	font-style: italic;
+	font-size: 12px;
+	font-family: 微软雅黑;
+	color: rgb(160, 160, 160);
+	/* font-style: italic; */
 }
 
-.receiveMsgDiv span img:hover{
+.receiveMsgSpan img:hover{
 	cursor: pointer;
 }
 
@@ -430,11 +447,35 @@
 	cursor: pointer;
 }
 
-.speakMsgDiv span{
+.speakMsgSpan{
 	display:inline-block;
 	width: 45%;
+}
+
+.speakMsgSpan font{
+	display:inline-block;
+	text-align:right;
+	font-size: 12px;
+	font-family: 微软雅黑;
+	color: rgb(160, 160, 160);
+}
+
+.speakMsgSpan div{
+	background-color: rgb(88, 250, 52, 0.7);
+	border: 1px solid rgb(240, 240, 240);
+	border-radius:5px !important;
 	font-size: 14px;
-	color: green;
+	line-height: 16px;
+	padding: 10px;
+	font-family: 微软雅黑;
+	color: rgb(63, 63, 63);
+	text-align:left;
+	margin-top: 5px;
+	display: inline-block;
+}
+
+.speakMsgSpan div{
+	
 }
 
 .speakMsgDiv span img:hover{
@@ -444,9 +485,10 @@
 .speakMsgDiv span font{
 	display:inline-block;
 	text-align:right;
-	font-size: 10px;
-	color: gray;
-	font-style: italic;
+	font-size: 12px;
+	font-family: 微软雅黑;
+	color: rgb(160, 160, 160);
+	/* font-style: italic; */
 }
 
 .chatToolsDiv{

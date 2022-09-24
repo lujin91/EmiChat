@@ -65,11 +65,6 @@ public class MessageServiceImpl implements MessageService {
 		int lastId = -1;
 		if(unreads.size() > 0)
 		{
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("oldValue", Constant.MESSAGE_TYPE_APPLY_NEW);
-			params.put("newValue", Constant.MESSAGE_TYPE_APPLY_HIST);
-			params.put("uid", uid);
-			mapper.changeTypeByUser(params);
 			lastId = unreads.get(unreads.size()-1).getId();
 		}
 		
@@ -103,9 +98,41 @@ public class MessageServiceImpl implements MessageService {
 		mapper.saveMessage(message);
 	}
 	
+	@Override
+	public boolean validApply(String sendId, String chatId, int chatType)
+			throws Exception {
+		if(chatType == Constant.CHAT_TYPE_GROUP){
+			return mapper.queryApplyCountByParams(sendId, chatId, null) == 0 ? true : false;
+		}else{
+			return mapper.queryApplyCountByParams(sendId, null, chatId) == 0 ? true : false;
+		}
+	}
+	
 	public static void main(String[] args) {
 		List<Message> results = new ArrayList<Message>();
 		results.addAll(null);
 		System.out.println(results);
+	}
+
+	@Override
+	public Map<String, Integer> loadLastIdByFriend(String uid) throws Exception 
+	{
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		List<String> list = mapper.queryMaxIdGroupBySendId(uid);
+		for(String str : list){
+			String[] arrys = str.split("#");
+			map.put(arrys[0], Integer.parseInt(arrys[1]));
+		}
+		
+		return map;
+	}
+
+	@Override
+	public void markReadAdvice(String uid) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("oldValue", Constant.MESSAGE_TYPE_APPLY_NEW);
+		params.put("newValue", Constant.MESSAGE_TYPE_APPLY_HIST);
+		params.put("uid", uid);
+		mapper.changeTypeByUser(params);
 	}
 }

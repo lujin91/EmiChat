@@ -64,15 +64,4 @@ ALTER TABLE tb_message ADD CONSTRAINT FK_MESSAGE_USER_2 FOREIGN KEY (recvId) REF
 ALTER TABLE tb_message ADD CONSTRAINT FK_MESSAGE_GROUP FOREIGN KEY (recvGrpId) REFERENCES tb_group (gid) on delete cascade;
 
 
-CREATE TABLE `tb_user` (
-  `uid` bigint NOT NULL auto_increment,
-  `user_name` varchar(50) NOT NULL unique,
-  `password` varchar(50) NOT NULL,
-  `headImg` varchar(100) NOT NULL,  
-  `emailAddr` varchar(100) NOT NULL,
-  `nickname` varchar(30) NOT NULL,
-  `birthday` DATE NOT NULL,
-  `status` int(1) NOT NULL,
-  PRIMARY KEY (`uid`)
-);
 

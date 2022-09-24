@@ -9,7 +9,7 @@
 <body>
 	<div id="headWin">
 		<form id="logoutForm" action="${pageContext.request.contextPath}/user/logout" style="margin: 0px; height: 100%">
-		<font>Mdp简易的webchat</font>
+		<font>Emi简易的webchat</font>
 		<span>欢迎您，${user.uname}&nbsp;&nbsp;<a id="logoutHref" href="javascript:void(0)">退出</a></span>
 		</form>
 	</div>

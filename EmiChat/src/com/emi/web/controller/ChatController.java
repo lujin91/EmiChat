@@ -109,11 +109,16 @@ public class ChatController {
 		List<Group> groups = gs.loadGrps((User)request.getSession().getAttribute("user"));
 		Map<String, List<Message>> advices = ms.loadAdviceMessages(((User)request.getSession().getAttribute("user")).getUid());
 		List<String> sendIds = ms.loadOfflineChatItemlist(((User)request.getSession().getAttribute("user")).getUid());
+		Map<String, Integer> lastIdByFriends = ms.loadLastIdByFriend(((User)request.getSession().getAttribute("user")).getUid());
 		for(RelationShip ship : relations){
 			if(sendIds.contains(ship.getCid())){
 				ship.setBlink(true);
 			}
+			Integer lastRecvMsgId = lastIdByFriends.get(ship.getCid());
+			ship.setLastRecvMsgId(lastRecvMsgId == null ? 0 : lastRecvMsgId);
 		}
+		
+		Collections.sort(relations);
 		request.getSession().setAttribute("groups", groups);
 		request.getSession().setAttribute("advices", advices);
 		request.getSession().setAttribute("relations", relations);
@@ -122,7 +127,9 @@ public class ChatController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/listAdvices")
 	public void listAdvices(HttpServletRequest request, HttpServletResponse resp) throws Exception{
+		String uid = ((User)request.getSession().getAttribute("user")).getUid();
 		Map<String, List<Message>> advices  = (Map<String, List<Message>>) request.getSession().getAttribute("advices");
+		ms.markReadAdvice(uid);
 		resp.getWriter().print(JsonUtil.map2json(advices));
 	}
 	
@@ -182,6 +189,14 @@ public class ChatController {
 			chatMessages = new ArrayList<Message>();
 		}
 		resp.getWriter().print(JsonUtil.list2json(chatMessages));
+	}
+	
+	@RequestMapping("/validApply")
+	public void validApply(String sendId, String chatId, int chatType, HttpServletResponse resp) throws Exception
+	{
+		Map<String, Boolean> map = new HashMap<String, Boolean>();
+		map.put("valid", ms.validApply(sendId, chatId, chatType));
+		resp.getWriter().print(JsonUtil.map2json(map));
 	}
 	
 	@RequestMapping("/addFriend")

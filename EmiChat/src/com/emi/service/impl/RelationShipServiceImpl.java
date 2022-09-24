@@ -1,6 +1,5 @@
 package com.emi.service.impl;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,6 @@ public class RelationShipServiceImpl implements RelationShipService{
 				ship.setOnline(true);
 			}
 		}
-		Collections.sort(relations);
 		return relations;
 	}
 

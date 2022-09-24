@@ -3,7 +3,6 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.9.1.min.js"></script>
 <title>Insert title here</title>
 </head>
 <body>
@@ -46,7 +45,6 @@
 				ua.match(/Macintosh/i) && Number(ua.match(/Chrome\/(\d{2})/i)[1]) < 49){
 			return ;
 		}
-		
 		var isFirefox = navigator.userAgent.toUpperCase().indexOf("FIREFOX") > -1 ? true : false;
 		
 		for(var i = 0; i < cbd.items.length; i++){
@@ -59,6 +57,7 @@
 				var reader = new FileReader();
 				var imgs = new Image();
 				imgs.file = blob;
+				
 				if(isFirefox){
 					reader.onload = (function(aImg){
 						return function(e){

@@ -63,6 +63,13 @@
 	</c:choose>
 </body>
 <script>
+	
+	$(function(){
+		if(Notification.permission != "denied" && Notification.permission != "granted"){
+			//Notification.requestPermission();
+		}
+	});
+	
 	$("#loginBtn").click(function(){
 		
 		var valid = true;
